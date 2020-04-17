@@ -1,0 +1,10 @@
+server
+
+api mapbox
+documentation: geocoding v5
+- doc.mapbox.com/api/search/#Geocoding
+- choose v5/{endpoint}
+need {search text}, my public token for api to call locations
+
+postman
+geocode_this 

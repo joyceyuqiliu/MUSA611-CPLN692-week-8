@@ -7,6 +7,7 @@ Try to use one or two of the drawing tools. They should allow you to draw
 without needing any additional configuration. These shapes will not be added to
 the map. We'll fix that in the next task.
 
+
 Task 2: Add rectangles to map
 
 Add the rectangle layers to the map when they are drawn. Hint: you can use the
@@ -88,18 +89,19 @@ Moving your mouse outside of the circle should remove the highlighting.
 
 ===================== */
 
-// Global Variables
+// Global Variables (to track it)
 var myRectangle;
+var myRectangles;
 
 // Initialize Leaflet Draw
 var drawControl = new L.Control.Draw({
   draw: {
     polyline: false,
     polygon: false,
-    circle: false,
+    circle: true,
     marker: false,
     circlemarker: false,
-    rectangle: true
+    Rectangle: false
   }
 });
 
@@ -109,5 +111,54 @@ map.addControl(drawControl);
 map.on('draw:created', function (e) {
     var type = e.layerType; // The type of shape
     var layer = e.layer; // The Leaflet layer for the shape
-    var id = L.stamp(layer); // The unique Leaflet ID for the layer
+    var id = L.stamp(layer);//this nu nique leaflet id for the layer
+
+    layer.bindPopup(`${id}`);
+    _.each(myRectangles, function(x) {map.addLayer(x)})
+
+// button control
+    $('#rectangle').append($,parseHTML('<div class="shape" data-leaflet-id=${id}><h1>Current ID: ${id}</h1></div>'))
+// $('div[data-leaftlet-id |= ${id}]').click(function(){}) apply click to this id
+    $('.shape').click(function(){
+      var clicked = $(this).attr('data-leaflet-id');
+      console.log(clicked);
+      _.each(myRectangles, function(x){map.removeLayer(s)});
+      myShapes = _.filter(myShapes, function(x){returnx.leaflet !=clicked})
+      _.each(myShapes. function(s){map.addLayer(s)})
+    })
+  //  console.log(layer,type,id);
+  //  if(myRectangle) {map.removeLayer(myRectangle)} // could check in console on whether there is a previous layer before you remove anything
+    //map.addLayer(layer);// The unique Leaflet ID for the layer
+
+//whenever mouseover happen, do this function; you could replace it with "click"
+//    layer.on("mouseover", function(e){
+//      console.log(e.target._leaflet_id) // use this feature to capture the selection without needing to let to persist on the page
+//      map.removeLayer(e.target)
+    //  map.removeLayer(e.target) disappear as soon as you create one
+//      $(`dic[data-leaflet-id|=${e.target._leaflet_id}]`).css("background-color", "red")
+//      $(`dic[data-leaflet-id|=${e.target._leaflet_id}]`).hide()
+//    })
+//Highlight as you click upon
+//part 7:
+    layer.on("mouseover", function(e){
+      hovered = e.target._leaflet_id;
+      $(`div[data-leaflet-id|=${hovered}]`).css("background-color", "yellow");
+    });
+//Highlight as you click upon
+      layer.on("mouseout", function(e){
+        hovered = e.target._leaflet_id;
+        $(`div[data-leaflet-id|=${hovered}]`).css("background-color", "white");
+      }) //want all the divs, such that this id is the selected id
+
+    var html= `<div class="shape" data-leaflet-id="${id}"><h1>Current ID:${id}</h1></div>`//in backticks is a html
+    var jhtml= $.parseHTML(html);
+    console.log(jhtml);
+    $('#shapes').append(jhtml); //${number} this makes changing number as flexible
+
+    $(`div[data-leaflet-id|=${id}]`).mouseover(function(e){
+      layer.openPopup()
+    });
+    $(`div[data-leaflet-id|=${id}]`).mouseout(function(e){
+      layer.closePopup()
+    });//getbyID could retrive the function for you, in geoJson layergroup
 });

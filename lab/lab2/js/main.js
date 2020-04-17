@@ -49,7 +49,8 @@ Task 1: Use Mapbox's 'Search' API to 'geocode' information from your input
 
 The docs: https://docs.mapbox.com/api/search/#geocoding
 (For this first task, the URL pattern you'll want to produce looks like this:
-`https://api.mapbox.com/geocoding/v5/mapbox.places/{geocode_this}.json?access_token={your_mapbox_token}`)
+`https://api.mapbox.com/geocoding/v5/mapbox.places/starbucks.json?access_token=pk.eyJ1IjoieXVxaWxpdSIsImEiOiJjazh1bGlmZmYwMjhpM2RycmU3d29wbDM2In0.SJ3uvZLirKHDLB8-LJ2SDg`)
+my token: pk.eyJ1IjoieXVxaWxpdSIsImEiOiJjazh1bGlmZmYwMjhpM2RycmU3d29wbDM2In0.SJ3uvZLirKHDLB8-LJ2SDg
 
 You might note that this task is slightly underspecified: there are multiple different
 ways to transform text into an address. For the lab, the simplest form of geocoding
@@ -72,6 +73,11 @@ Task 2: Use Mapbox's 'Navigation' API to generate a route based on your origin a
 
 The docs: https://docs.mapbox.com/api/navigation/#directions
 (No example url provided, try to figure it out using the docs)
+# could go to the playground
+# /directions/v5/{profile}/{coordinates}?access_token=pk.eyJ1IjoibnppbW1lcm1hbiIsImEiOiJjanR1NTBjeWMwZTBlM3lsbXU2d3BtYThzIn0.R0mxkEoHLh-xKk7oG0Tqxg
+# use draw to place drop-pins,
+https://api.mapbox.com/directions/v5/mapbox/cycling/-75.198742,39.953627;-75.188680,39.954771;-75.169910,39.962826?access_token=pk.eyJ1IjoibnppbW1lcm1hbiIsImEiOiJjanR1NTBjeWMwZTBlM3lsbXU2d3BtYThzIn0.R0mxkEoHLh-xKk7oG0Tqxg
+
 
 Again, the task is somewhat underspecified. Let's start with the simplest routing
 option available. Once you're getting a valid (as best you can tell) response
@@ -79,6 +85,12 @@ from the server, move to the next task.
 
 
 Task 3: Decode your route response
+# but we are probably more interested in polyline
+#decode "geometry" section after return from api url in postman:
+     e.g. yorwFrdqbMbC|AaElMiCcBCHBIlGdECC~DiMxD{LiGaEwDvLDB
+
+# line take spring from coordinates (turfs)
+#  turf.lineString(coords) in console in HTML
 
 Intrepid readers may have already discovered that route responses are NOT
 in the familiar GeoJSON format. To see what I mean, look at the `geometry` property
@@ -87,6 +99,8 @@ special encoding standardized by google to try and cut down on response sizes an
 response times. Relevant docs may be found here:
 https://developers.google.com/maps/documentation/utilities/polylineutility
 
+
+
 The string you'll have to decode will look something like this:
 `ee~jkApakppCmPjB}TfCuaBbQa|@lJsd@dF|Dl~@pBfb@t@bQ?tEOtEe@vCs@xBuEfNkGdPMl@oNl^eFxMyLrZoDlJ{JhW}JxWuEjL]z@mJlUeAhC}Tzi@kAv`...
 
@@ -94,6 +108,11 @@ A mapbox library for decoding these polylines is included for decoding these int
 an array of lat/lng coordinates from which a line can be constructed.
 Simply call `polyline.decode` on the polyline encoding.
 https://github.com/mapbox/polyline
+
+var polyline = require('@mapbox/polyline');???
+
+// returns an array of lat, lon pairs
+polyline.toGeoJson('a_m~Fn`{uOeeEyeAtMnq@fmA?~F}gA');????
 
 To plot these on the map, write a function to convert them to GeoJSON. Remember:
 GeoJSON is just an agreed upon format to storing shapes in JSON. Take a look
@@ -171,4 +190,3 @@ $(document).ready(function() {
   });
 
 });
-
